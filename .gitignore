@@ -1,0 +1,4 @@
+#The directory stores temporary files
+pattern_files/
+sequence_files/
+shapping_files/
