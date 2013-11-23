@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1380728002 source:f:\software_project\on-off-gen\gengeo.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"gengeo.h"
+
+1382223397 
+
+1382223397 source:f:\software_project\on-off-gen\main.c
+	<stdio.h>
+	<stdlib.h>
+	"gengeo.h"
+	<string.h>
+	<unistd.h>
+
+1380727872 f:\software_project\on-off-gen\gengeo.h
+
+1380724404 source:/home/shaper/ON-OFF-gen/gengeo.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"gengeo.h"
+
+1380724274 /home/shaper/ON-OFF-gen/gengeo.h
+
