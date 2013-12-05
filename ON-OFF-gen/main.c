@@ -70,7 +70,6 @@ int main(int argc, char** argv)
 {
   char output_file[60];
   char output_file_csv[55];
-  int first_entry = 0;
   char* input_string;    // Input string
   FILE   *fp, *fp_on_off;
   int c;
@@ -174,27 +173,29 @@ int main(int argc, char** argv)
 
   // Generate and output geometric random variables
           if(sess_length > 0){
-              first_entry = 1;
               fprintf(fp, "%d,%d",1,1);
+              geo_rv_on = geo(p_on);
+              geo_rv_off = geo(p_off);
+              calculated_delay = geo_rv_off * avg_iat;
+              i = geo_rv_on;
+              fprintf(fp_on_off, "%d, %d\n", on_packets ,off_packets);
+              fprintf(fp, ",%d,%d", i + 1,calculated_delay);
+              fprintf(fp, ",%d,%d", i + 2,1);
             while (i < sess_length)
                 {
+
                     geo_rv_on = geo(p_on);
+                    i += geo_rv_on;
                     geo_rv_off = geo(p_off);
                     calculated_delay = geo_rv_off * avg_iat;
-                    if(first_entry == 1){
-                        i = geo_rv_on;
-                        fprintf(fp, ",%d,%d", i + 1,calculated_delay);
-                        fprintf(fp, ",%d,%d", i + 2,1);
-                        first_entry = 0;
 
-                    }
-                    i += (geo_rv_on + geo_rv_off);
                     if(i < sess_length){
                         fprintf(fp_on_off, "%d, %d\n", geo_rv_on, geo_rv_off);
                         fprintf(fp, ",%d,%d", i + 1, calculated_delay);
                         fprintf(fp, ",%d,%d", i + 2, 1);
 
                     }
+                    i += geo_rv_off;
                 }
                 seed = geo_rv_on+geo_rv_off;
                 printf("%d",seed);
@@ -209,27 +210,31 @@ int main(int argc, char** argv)
 
                 // Generate and output geometric random variables
           if(sess_duration > 0){
-              first_entry = 1;
               fprintf(fp, "%d,%d",1,1);
+              geo_rv_on = geo(p_on);
+              geo_rv_off = geo(p_off);
+              calculated_delay = geo_rv_off;
+              i = geo_rv_on;
+              fprintf(fp_on_off, "%d, %d\n", geo_rv_on, geo_rv_off);
+              fprintf(fp, ",%d,%d", i + 1,calculated_delay);
+              fprintf(fp, ",%d,%d", i + 2,1);
+
+              i += geo_rv_off;
+
             while (i < sess_duration)
                 {
                     geo_rv_on = geo(p_on);
+                    i += geo_rv_on;
                     geo_rv_off = geo(p_off);
                     calculated_delay = geo_rv_off;
-                    if(first_entry == 1){
-                        i = geo_rv_on;
-                        fprintf(fp, ",%d,%d", i + 1,calculated_delay);
-                        fprintf(fp, ",%d,%d", i + 2,1);
-                        first_entry = 0;
 
-                    }
-                    i += (geo_rv_on + geo_rv_off);
                     if(i < sess_duration){
                         fprintf(fp_on_off, "%d, %d\n", geo_rv_on, geo_rv_off);
                         fprintf(fp, ",%d,%d", i + 1, calculated_delay);
                         fprintf(fp, ",%d,%d", i + 2, 1);
 
                     }
+                    i += geo_rv_off;
                 }
                 seed = geo_rv_on+geo_rv_off;
                 printf("%d",seed);
@@ -251,20 +256,16 @@ int main(int argc, char** argv)
 
           // Generate and output deterministic pattern
           if(sess_length > 0){
-              first_entry = 1;
               fprintf(fp, "%d,%d",1,1);
+              i = on_packets;
+              fprintf(fp, ",%d,%d", i + 1,off_time);
+              fprintf(fp, ",%d,%d", i + 2,1);
             while (i < sess_length)
                 {
-                    if(first_entry == 1){
-                        i = on_packets;
-                        fprintf(fp, ",%d,%d", i + 1,off_time);
-                        fprintf(fp, ",%d,%d", i + 2,1);
-                        first_entry = 0;
 
-                    }
                     i += (on_packets + off_packets);
                     if(i < sess_length){
-                        fprintf(fp_on_off, "%d, %d\n", on_packets ,off_packets);
+
                         fprintf(fp, ",%d,%d", i + 1,off_time);
                         fprintf(fp, ",%d,%d", i + 2,1);
 
@@ -281,20 +282,19 @@ int main(int argc, char** argv)
 
           // Generate and output deterministic pattern
           if(sess_duration > 0){
-              first_entry = 1;
               fprintf(fp, "%d,%d",1,1);
-            while (i < sess_duration)
-                {
-                    if(first_entry == 1){
+
                         i = on_time;
                         fprintf(fp, ",%d,%d", i + 1,off_time);
                         fprintf(fp, ",%d,%d", i + 2,1);
-                        first_entry = 0;
 
-                    }
-                    i += (on_time + off_time);
+
+
+            while (i < sess_duration)
+                {
+
+                   i += (on_time + off_time);
                     if(i < sess_duration){
-                        fprintf(fp_on_off, "%d, %d\n", on_time ,off_time);
                         fprintf(fp, ",%d,%d", i + 1,off_time);
                         fprintf(fp, ",%d,%d", i + 2,1);
 
