@@ -1,4 +1,22 @@
-#The directory stores temporary files
+# Object files
+*.o
+*.ko
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+
 pattern_files/
-sequence_files/
+secuence_files/
 shapping_files/
