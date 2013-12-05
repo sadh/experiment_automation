@@ -167,8 +167,8 @@ int main(int argc, char** argv)
                 sess_duration = floor(sess_duration * 1000);
                 on_packets = floor(on_time/avg_iat);
                 off_packets = floor(off_time/avg_iat);
-                p_on = pow((off_packets +1),-1);
-                p_off = pow((on_packets +1),-1);
+                p_on = pow((on_packets +1),-1);
+                p_off = pow((off_packets +1),-1);
                 sess_length = floor(sess_duration/avg_iat);
             }
 
@@ -204,8 +204,8 @@ int main(int argc, char** argv)
                 on_time = on_time * 1000;
                 off_time = off_time * 1000;
                 sess_duration = floor(sess_duration * 1000);
-                p_on = pow((off_time + 1),-1) * on_time;
-                p_off = pow((off_time +off_time),-1) * off_time;
+                p_on = pow((on_time + 1),-1);
+                p_off = pow((off_time + 1),-1);
 
                 // Generate and output geometric random variables
           if(sess_duration > 0){
