@@ -17,6 +17,9 @@
 *.out
 *.app
 
+bin/
+obj/
+
 pattern_files/
 secuence_files/
 shapping_files/
