@@ -18,6 +18,7 @@
 *.app
 
 bin/
+obj/
 
 pattern_files/
 secuence_files/
