@@ -108,7 +108,7 @@ INER_ARRIVAL_TIME=$(echo $line | cut -d"," -f6)
 
 NO_OF_ITERATION=$(echo $line | cut -d"," -f7)
 
-echo $DISTRIBUTION $SEED $ON_TIME $OFF_TIME $SESS_DURATION $INER_ARRIVAL_TIME  $NO_OF_ITERATION
+check_invalid_character($DISTRIBUTION, $SEED, $ON_TIME, $OFF_TIME, $SESS_DURATION, $INER_ARRIVAL_TIME,  $NO_OF_ITERATION)
 
 
 ./generate_on_off_pattern.sh -d $DISTRIBUTION -s $SEED -o $ON_TIME -f $OFF_TIME -t $SESS_DURATION -a $INER_ARRIVAL_TIME -n $NO_OF_ITERATION -m $MODE
@@ -130,5 +130,3 @@ sleep $SESS_DURATION
 ssh -i ../.ssh/id_rsa server@10.0.1.1 ./stop_traffic_capture_server.sh
 ssh -i ../.ssh/id_rsa client@192.168.0.101 ./stop_traffic_capture_client.sh 
 done 
-
-#ssh -i ../.ssh/id_rsa client@192.168.0.101 tshark -r test_automation.cap -T fields -e frame.number -e frame.time -e frame.time_delta -e frame.time_delta_displayed -e frame.time_relative > test_automation.csv'
