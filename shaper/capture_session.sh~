@@ -125,7 +125,7 @@ fi
 echo $DISTRIBUTION $SEED $ON_TIME $OFF_TIME $SESS_DURATION $INTER_ARRIVAL_TIME $NO_OF_ITERATION
 
 ./generate_on_off_pattern.sh -d $DISTRIBUTION -s $SEED -o $ON_TIME -f $OFF_TIME -t $SESS_DURATION -a $INTER_ARRIVAL_TIME -n $NO_OF_ITERATION -m $MODE
-./generate_shapping_pattern.sh -m $MODE
+#./generate_shapping_pattern.sh -m $MODE
 done
 
 file_list=$(ls shapping_files/)
@@ -133,13 +133,13 @@ for shapping_file in $file_list;
 do
 shapping_file_name=${shapping_file//.dcp/}
 SESS_DURATION=$(echo $shapping_file_name | cut -d_ -f5)
-./apply_shapping_pattern.sh -f $shapping_file -m $MODE
-./start_server.sh -f $shapping_file_name
-./start_client.sh -f $shapping_file_name
+#./apply_shapping_pattern.sh -f $shapping_file -m $MODE
+#./start_server.sh -f $shapping_file_name
+#./start_client.sh -f $shapping_file_name
 
 echo "Waiting for $SESS_DURATION sec"
-sleep $SESS_DURATION
+#sleep $SESS_DURATION
 
-ssh -i ../.ssh/id_rsa server@10.0.1.1 ./stop_traffic_capture_server.sh
-ssh -i ../.ssh/id_rsa client@192.168.0.101 ./stop_traffic_capture_client.sh 
+#ssh -i ../.ssh/id_rsa server@10.0.1.1 ./stop_traffic_capture_server.sh
+#ssh -i ../.ssh/id_rsa client@192.168.0.101 ./stop_traffic_capture_client.sh 
 done 
