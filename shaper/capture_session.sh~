@@ -124,7 +124,7 @@ fi
 
 echo $DISTRIBUTION $SEED $ON_TIME $OFF_TIME $SESS_DURATION $INTER_ARRIVAL_TIME $NO_OF_ITERATION
 
-./generate_on_off_pattern.sh -d $DISTRIBUTION -s $SEED -o $ON_TIME -f $OFF_TIME -t $SESS_DURATION -a $INTER_ARRIVAL_TIME -n $NO_OF_ITERATION -m $MODE
+#./generate_on_off_pattern.sh -d $DISTRIBUTION -s $SEED -o $ON_TIME -f $OFF_TIME -t $SESS_DURATION -a $INTER_ARRIVAL_TIME -n $NO_OF_ITERATION -m $MODE
 #./generate_shapping_pattern.sh -m $MODE
 done
 
