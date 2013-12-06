@@ -11,30 +11,54 @@ NO_OF_ITERATION=1
 COUNTER=1
 MODE=data
 
-usage{
+usage {
 cat << EOF
 usage: capture_session.sh [-f <input_files>| -m [data][time]
 EOF
 exit 1;
 }
 
-check_invalid_character{
+check_invalid_character {
 if ! [[ $1 =~ \GEOMETRIC\ || $1 =~ \NONE\ ]]; then
   return 1
-elif ! [[ $2 =~ ^[0-9]+$ ]]; then
+else
+  echo "$1 :Invalid option in input file"
+  exit 1
+fi
+if ! [[ $2 =~ ^[0-9]+$ ]]; then
   return 1
-elif ! [[ $3 =~ [0-9] ]]; then
+else
+  echo "$2 :Invalid option in input file"
+  exit 1
+fi
+if ! [[ $3 =~ [0-9] ]]; then
   return 1
-elif ! [[ $4 =~ [0-9] ]]; then
+else
+  echo "$3 :Invalid option in input file"
+  exit 1
+fi
+if ! [[ $4 =~ [0-9] ]]; then
   return 1
-elif ! [[ $5 =~ ^[0-9]+\.?[0-9]?$ ]]; then
+else
+  echo "$4 :Invalid option in input file"
+  exit 1
+fi
+if ! [[ $5 =~ ^[0-9]+\.?[0-9]?$ ]]; then
   return 1
-elif ! [[ $6 =~ ^[0-9]?\.?[0-9]?$ ]]; then
+else
+  echo "$5 :Invalid option in input file"
+  exit 1
+fi
+if ! [[ $6 =~ ^[0-9]?\.?[0-9]?$ ]]; then
   return 1
+else
+  echo "$6 :Invalid option in input file"
+  exit 1
+fi
 if ! [[ $7 =~ [0-9] ]]; then
   return 1
 else
-  echo "Invalid option in input file"
+  echo "$7 :Invalid option in input file"
   exit 1
 fi
 }
@@ -56,13 +80,13 @@ while getopts "f:m:h" opt; do
       	MODE=$OPTARG
       	;;
 		h)
-      	usage
+      	usage()
       	;;
     	\?)
-      	usage
+      	usage()
       	;;
     	:)
-      	usage
+      	usage()
       	;;
   esac
 done
