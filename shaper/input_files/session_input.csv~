@@ -1,3 +1,0 @@
-Distribution,Seed,On Time,Off Time,Session length,Inter arrival time,Number of iteration
-NONE,20000,2,8,1800,0.007,5
-GEOMETRIC	100001	8	2	1800	0.007	5
