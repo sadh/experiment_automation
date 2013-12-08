@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 CAPTURE_FILE_NAME='test'
 CAPTURE_PORT=80
 TRANSPORT_PROTO='tcp'
@@ -30,7 +30,7 @@ done
 #Start tshark in client#
 #ssh -i ../.ssh/id_rsa client@192.168.0.101 chmod +x capture_traffic_client.sh
 
-ssh -i ../.ssh/id_rsa client@192.168.0.101 ./start_traffic_generator_client.sh &
-ssh -i ../.ssh/id_rsa client@192.168.0.101 ./capture_traffic_client.sh -f $CAPTURE_FILE_NAME &
+ssh client@192.168.0.101 ./start_traffic_generator_client.sh &
+ssh client@192.168.0.101 ./capture_traffic_client.sh -f $CAPTURE_FILE_NAME &
 
 

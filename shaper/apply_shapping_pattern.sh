@@ -1,4 +1,4 @@
-#!/bin/bash
+#! usr/bin/bash
 PATT_FILE_NAME='shapping_files/'
 TRANSPORT_PROTO=udp
 while getopts "f:p:" opt; do

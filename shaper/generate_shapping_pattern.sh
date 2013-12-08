@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/bin/bash
  
 file_list=$(ls pattern_files/)
 

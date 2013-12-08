@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 
 SESS_DURATION=0
 SESSION_DESCRIPTION_FILE=''
@@ -118,11 +118,11 @@ INTER_ARRIVAL_TIME=$(echo $line | cut -d"," -f6)
 
 NO_OF_ITERATION=$(echo $line | cut -d"," -f7)
 
-if ! check_invalid_character $DISTRIBUTION $SEED $ON_TIME $OFF_TIME $SESS_DURATION $INTER_ARRIVAL_TIME $NO_OF_ITERATION ;then
-exit;
-fi
-
+INVALID_CH= check_invalid_character $DISTRIBUTION $SEED $ON_TIME $OFF_TIME $SESS_DURATION $INTER_ARRIVAL_TIME $NO_OF_ITERATION
 echo $DISTRIBUTION $SEED $ON_TIME $OFF_TIME $SESS_DURATION $INTER_ARRIVAL_TIME $NO_OF_ITERATION
+if [ $INVALID_CH -eq 1 ];then
+exit
+fi
 
 ./generate_on_off_pattern.sh -d $DISTRIBUTION -s $SEED -o $ON_TIME -f $OFF_TIME -t $SESS_DURATION -a $INTER_ARRIVAL_TIME -n $NO_OF_ITERATION -m $MODE
 ./generate_shapping_pattern.sh -m $MODE
@@ -140,6 +140,6 @@ SESS_DURATION=$(echo $shapping_file_name | cut -d_ -f5)
 echo "Waiting for $SESS_DURATION sec"
 sleep $SESS_DURATION
 
-ssh -i ../.ssh/id_rsa server@10.0.1.1 ./stop_traffic_capture_server.sh
-ssh -i ../.ssh/id_rsa client@192.168.0.101 ./stop_traffic_capture_client.sh 
+ssh server@10.0.1.1 ./stop_traffic_capture_server.sh
+ssh client@192.168.0.101 ./stop_traffic_capture_client.sh 
 done 
