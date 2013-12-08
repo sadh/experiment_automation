@@ -1,4 +1,4 @@
-#!/urs/local/bin/bash
+#!/bin/bash
 
 SESS_DURATION=0
 SESSION_DESCRIPTION_FILE=''
