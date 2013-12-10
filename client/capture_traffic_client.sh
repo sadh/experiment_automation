@@ -1,18 +1,18 @@
 #!/bin/bash
 CAPTURE_FILE_NAME='test.cap'
-CAPTURE_PORT=4000
-TRANSPORT_PROTO='udp'
+PORT=4000
+PROTO='udp'
 
-while getopts "f:t:p" opt; do
+while getopts "f:t:p:" opt; do
   case $opt in
     	f)
       	CAPTURE_FILE_NAME=$OPTARG
       	;;
-	t)
-      	TRANSPORT_PROTO=$OPTARG
+		t)
+      	PROTO=$OPTARG
       	;;
-	p)
-      	CAPTURE_PORT=$OPTARG
+		p)
+      	PORT=$OPTARG
       	;;
     	\?)
       	echo "Invalid option: -$OPTARG" >&2
@@ -27,4 +27,4 @@ done
 
 mkdir -p "client_captured_files"
 
-tshark -f "$TRANSPORT_PROTO port $CAPTURE_PORT" -w client_captured_files/$CAPTURE_FILE_NAME'_client.pcap'
+tshark -f "$PROTO port $PORT" -w client_captured_files/$CAPTURE_FILE_NAME'_client.pcap'

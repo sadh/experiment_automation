@@ -27,7 +27,7 @@ do
 	typeset -f SESSION_LENGTH NTER_ARRIVAL_TIME
 	SESSION_LENGTH=$(echo $patt_file_name | cut -d_ -f5)
 	INTER_ARRIVAL_TIME=$(echo $patt_file_name | cut -d_ -f6)
-	if [ $MODE = "time"];then
+	if [ $MODE = "time" ];then
 		SHAPPING_TIME=$(echo "scale=0; $SESSION_LENGTH * 1000" | bc -l)
 		patt_gen -del -pos "shapping_files/$patt_file_name"".dcp" $MODE $SHAPPING_TIME -f pattern_files/$patt_file
 	else

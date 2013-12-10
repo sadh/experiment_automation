@@ -1,18 +1,18 @@
 #!/usr/local/bin/bash
-CAPTURE_FILE_NAME='test'
-CAPTURE_PORT=80
-TRANSPORT_PROTO='tcp'
+CAPTURE_FILE_NAME=''
+PORT=80
+PROTO='udp'
 
-while getopts "f:t:p" opt; do
+while getopts "f:t:p:" opt; do
   case $opt in
     	f)
       	CAPTURE_FILE_NAME=$OPTARG
       	;;
-	t)
-      	TRANSPORT_PROTO=$OPTARG
+		t)
+      	PROTO=$OPTARG
       	;;
-	p)
-      	CAPTURE_PORT=$OPTARG
+		p)
+      	PORT=$OPTARG
       	;;
     	\?)
       	echo "Invalid option: -$OPTARG" >&2
@@ -25,12 +25,13 @@ while getopts "f:t:p" opt; do
   esac
 done
 
-#Start Mgen client#
-#scp -i ../.ssh/id_rsa capture_traffic_client.sh client@192.168.0.101:/home/client/
-#Start tshark in client#
-#ssh -i ../.ssh/id_rsa client@192.168.0.101 chmod +x capture_traffic_client.sh
+if [ $PROTO = "udp" ];then
 
-ssh client@192.168.0.101 ./start_traffic_generator_client.sh &
-ssh client@192.168.0.101 ./capture_traffic_client.sh -f $CAPTURE_FILE_NAME &
+ssh client@192.168.0.101 ./start_udp_traffic_generator_client.sh &
+ssh client@192.168.0.101 ./capture_traffic_client.sh -f $CAPTURE_FILE_NAME -t $PROTO -p $PORT &
+elif
 
+ssh client@192.168.0.101 ./start_tcp_traffic_generator_client.sh &
+ssh client@192.168.0.101 ./capture_traffic_client.sh -f $CAPTURE_FILE_NAME -t $PROTO -p $PORT &
 
+fi
