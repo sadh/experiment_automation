@@ -28,12 +28,11 @@ done
 if [ $PROTO = "udp" ];then
 
 ssh server@10.0.1.1 ./start_traffic_generator_server.sh &
-
 ssh server@10.0.1.1 ./capture_traffic_server.sh -f $CAPTURE_FILE_NAME -t $PROTO -p $PORT &
 
-elif
+else
 
-ssh client@192.168.0.101 ./capture_traffic_client.sh -f $CAPTURE_FILE_NAME -t $PROTO -p $PORT &
+ssh server@10.0.1.1 ./capture_traffic_server.sh -f $CAPTURE_FILE_NAME -t $PROTO -p $PORT &
 
 fi
 
