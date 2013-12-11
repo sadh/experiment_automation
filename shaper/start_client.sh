@@ -8,10 +8,10 @@ while getopts "f:t:p:" opt; do
     	f)
       	CAPTURE_FILE_NAME=$OPTARG
       	;;
-		t)
+	t)
       	PROTO=$OPTARG
       	;;
-		p)
+	p)
       	PORT=$OPTARG
       	;;
     	\?)

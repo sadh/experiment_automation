@@ -146,11 +146,14 @@ do
 shapping_file_name=${shapping_file//.dcp/}
 SESS_DURATION=$(echo $shapping_file_name | cut -d_ -f5)
 ./apply_shapping_pattern.sh -f $shapping_file -m $MODE -p $PROTO
-./start_server.sh -f $shapping_file_name -t $PROTO -p $PORT
 ./start_client.sh -f $shapping_file_name -t $PROTO -p $PORT
+./start_server.sh -f $shapping_file_name -t $PROTO -p $PORT
 
+
+if [ $PORTO = "tcp" ];then
 echo "Waiting for $SESS_DURATION sec"
 sleep $SESS_DURATION
+fi
 
 ssh server@10.0.1.1 ./stop_traffic_capture_server.sh
 ssh client@192.168.0.101 ./stop_traffic_capture_client.sh 

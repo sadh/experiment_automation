@@ -6,7 +6,7 @@ while getopts "f:p:" opt; do
     	f)
       	PATT_FILE_NAME="$PATT_FILE_NAME"$OPTARG
       	;;
-		p)
+	p)
       	PROTO=$OPTARG
       	;;
        	\?)
@@ -20,9 +20,9 @@ while getopts "f:p:" opt; do
   esac
 done
 
-echo itslabb00 | sudo -S ipfw -f flush
-echo itslabb00 | sudo -S ipfw -f pipe flush
-echo itslabb00 | sudo -S ipfw add allow all from any to any
-echo itslabb00 | sudo -S ipfw add 1 pipe 1001 $PROTO from 10.0.1.1 to 192.168.0.101 in
-echo itslabb00 | sudo -S ipfw pipe 1001 config delay 1ms bw 100Mbit/s pattern $PATT_FILE_NAME
+sudo  ipfw -f flush
+sudo  ipfw -f pipe flush
+sudo  ipfw add allow all from any to any
+sudo  ipfw add 1 pipe 1001 $PROTO from 10.0.1.1 to 192.168.0.101 in
+sudo  ipfw pipe 1001 config delay 1ms bw 100Mbit/s pattern $PATT_FILE_NAME
 
