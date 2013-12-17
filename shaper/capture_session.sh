@@ -134,7 +134,6 @@ fi
 
 ./generate_on_off_pattern.sh -d $DISTRIBUTION -s $SEED -o $ON_TIME -f $OFF_TIME -t $SESS_DURATION -a $INTER_ARRIVAL_TIME -n $NO_OF_ITERATION -m $MODE
 ./generate_shapping_pattern.sh -m $MODE
-done
 
 if [ $PROTO = "tcp" ];then
 	PORT=80
@@ -157,5 +156,6 @@ fi
 
 ssh server@10.0.1.1 ./stop_traffic_capture_server.sh -p $PROTO
 ssh client@192.168.0.101 ./stop_traffic_capture_client.sh -p $PROTO
-done 
+done
 ./file_copy_to_ext_hd.sh
+done
