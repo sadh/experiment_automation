@@ -158,3 +158,4 @@ fi
 ssh server@10.0.1.1 ./stop_traffic_capture_server.sh -p $PROTO
 ssh client@192.168.0.101 ./stop_traffic_capture_client.sh -p $PROTO
 done 
+./file_copy_to_ext_hd.sh
