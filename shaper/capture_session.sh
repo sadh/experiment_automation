@@ -102,10 +102,18 @@ elif [[ -z $MODE ]];then
 	exit 1
 fi
 
-cat $SESSION_DESCRIPTION_FILE | sed 1d | while read line;
-do
+while read -u3 line;do
+echo $line
+rm -rf "pattern_files"
+rm -rf "sequence_files"
+mkdir -p "pattern_files"
+mkdir -p "sequence_files"
+rm -rf "shapping_files"
+mkdir -p "shapping_files"
+
 if [[ -z $line ]]
 then
+echo "Empty line."
 continue
 fi
 DISTRIBUTION=$(echo $line | cut -d"," -f1)
@@ -140,8 +148,7 @@ if [ $PROTO = "tcp" ];then
 fi
 
 file_list=$(ls shapping_files/)
-for shapping_file in $file_list;
-do
+for shapping_file in $file_list;do
 shapping_file_name=${shapping_file//.dcp/}
 SESS_DURATION=$(echo $shapping_file_name | cut -d_ -f5)
 ./apply_shapping_pattern.sh -f $shapping_file -p $PROTO
@@ -157,5 +164,7 @@ fi
 ssh server@10.0.1.1 ./stop_traffic_capture_server.sh -p $PROTO
 ssh client@192.168.0.101 ./stop_traffic_capture_client.sh -p $PROTO
 done
+
 ./file_copy_to_ext_hd.sh
-done
+echo "Starting Next Session"
+done 3<$SESSION_DESCRIPTION_FILE
