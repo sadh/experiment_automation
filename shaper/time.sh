@@ -1,4 +1,5 @@
 #!/usr/local/bin/bash
-N=$RANDOM
+#N=$RANDOM
 TIME=$(date +%Y%m%d_%H_%M)
-echo $TIME"_$N" 
+echo $TIME
+#"_"$N 

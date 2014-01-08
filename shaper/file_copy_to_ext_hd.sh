@@ -1,18 +1,26 @@
 #!/usr/local/bin/bash
 
-ON_TIME=9
-OFF_TIME=1
-MODE=data
+#file_copy_to_ext_hd.sh  -d $DIR -m $MODE -t $PROTO -c $COMMENT
 
-while getopts "o:f:m:" opt; do
+
+MODE=data
+DISTRIBUTION="NONE"
+SEED=1
+PROTO=udp
+COMMENT=""
+DIRC=""
+while getopts "m:c:t:d:" opt; do
   case $opt in
-	o)
-      	ON_TIME=$OPTARG
-      	;;
-	f)
-      	OFF_TIME=$OPTARG
-      	;;
-	m)
+	d)
+        DIRC=$OPTARG
+        ;;
+        t)
+        PROTO=$OPTARG
+        ;;
+        c)
+        COMMENT=$OPTARG
+        ;;
+        m)
       	MODE=$OPTARG
       	;;
     	\?)
@@ -26,34 +34,34 @@ while getopts "o:f:m:" opt; do
   esac
 done
 
-
-
 TIME="$(./time.sh)"
 
-CLIENT="client_captured_files_"$MODE"_$ON_TIME"_$OFF_TIME""_$TIME""
-PATT="pattern_files_"$MODE"_$ON_TIME"_$OFF_TIME""_$TIME""
-SERVER="server_captured_files_"$MODE"_$ON_TIME"_$OFF_TIME""_$TIME""
-EX_HD='/media/My\ Passport/'
+DIR="MO_"$MODE"_PRO_"$PROTO"_"$DIRC"_"$TIME"_"$COMMENT
 
-#echo $CLIENT 
+#echo $DIR $COMMENT
+#echo before comment
+#: <<'END'
+
+CLIENT="client_traces_"$MODE"_"$PROTO"_"$DIRC"_"$TIME
+PATT="pattern_files_"$MODE"_"$PROTO"_"$DIRC"_"$TIME
+SERVER="server_traces_"$MODE"_"$PROTO"_"$DIRC"_"$TIME
+EX_HD='/media/client/My\ Passport/'
 
  
 #echo before comment
 #: <<'END'
 
-
-
-mv client_captured_files  $CLIENT
+ssh client@192.168.0.101 mkdir $EX_HD/$DIR
 ssh client@192.168.0.101 mv client_captured_files  $CLIENT 
 ssh client@192.168.0.101 tar -zcf $CLIENT.tar.gz $CLIENT
-ssh client@192.168.0.101 "cp $CLIENT.tar.gz $EX_HD"
+ssh client@192.168.0.101 "cp $CLIENT.tar.gz $EX_HD$DIR/"
 ssh client@192.168.0.101 rm -r $CLIENT.tar.gz
 ssh client@192.168.0.101 rm -r $CLIENT
 
 mv pattern_files  $PATT
 tar -zcf $PATT.tar.gz  $PATT
 scp $PATT.tar.gz  client@192.168.0.101:/tmp
-ssh client@192.168.0.101 "cp /tmp/$PATT.tar.gz $EX_HD"
+ssh client@192.168.0.101 "cp /tmp/$PATT.tar.gz $EX_HD$DIR/"
 rm  $PATT.tar.gz
 
 mv $PATT pattern_files
@@ -63,7 +71,7 @@ ssh -n server@10.0.1.1 mv server_captured_files  $SERVER
 ssh -n server@10.0.1.1 tar zcf - $SERVER | cat - > $SERVER.tar.gz
 scp $SERVER.tar.gz client@192.168.0.101:/tmp
 rm $SERVER.tar.gz
-ssh client@192.168.0.101 "cp /tmp/$SERVER.tar.gz $EX_HD"
+ssh client@192.168.0.101 "cp /tmp/$SERVER.tar.gz $EX_HD$DIR/"
 ssh client@192.168.0.101 rm   /tmp/$SERVER.tar.gz
 ssh -n server@10.0.1.1 rm -r $SERVER
 
