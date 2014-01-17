@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 
 SESS_DURATION=0
 SESSION_DESCRIPTION_FILE=''
@@ -54,12 +54,6 @@ fi
 }
 
 
-rm -rf "pattern_files"
-rm -rf "sequence_files"
-mkdir -p "pattern_files"
-mkdir -p "sequence_files"
-rm -rf "shapping_files"
-mkdir -p "shapping_files"
 
 while getopts "f:m:t:h" opt; do
   case $opt in
@@ -104,6 +98,13 @@ fi
 
 cat $SESSION_DESCRIPTION_FILE | sed 1d | while read line;
 do
+rm -rf "pattern_files"
+rm -rf "sequence_files"
+rm -rf "shapping_files"
+mkdir -p "pattern_files"
+mkdir -p "sequence_files"
+mkdir -p "shapping_files"
+
 if [[ -z $line ]]
 then
 continue
@@ -133,20 +134,21 @@ exit
 fi
 
 ./generate_on_off_pattern.sh -d $DISTRIBUTION -s $SEED -o $ON_TIME -f $OFF_TIME -t $SESS_DURATION -a $INTER_ARRIVAL_TIME -n $NO_OF_ITERATION -m $MODE
-./generate_shapping_pattern.sh -m $MODE
+#./generate_shapping_pattern.sh -m $MODE
 
 if [ $PROTO = "tcp" ];then
 	PORT=80
 fi
 
 file_list=$(ls shapping_files/)
+
 for shapping_file in $file_list;
 do
 shapping_file_name=${shapping_file//.dcp/}
 SESS_DURATION=$(echo $shapping_file_name | cut -d_ -f5)
-./apply_shapping_pattern.sh -f $shapping_file -p $PROTO
-./start_server.sh -f $shapping_file_name -t $PROTO -p $PORT
-./start_client.sh -f $shapping_file_name -t $PROTO -p $PORT
+#./apply_shapping_pattern.sh -f $shapping_file -p $PROTO
+#./start_server.sh -f $shapping_file_name -t $PROTO -p $PORT
+#./start_client.sh -f $shapping_file_name -t $PROTO -p $PORT
 
 
 if [ $PROTO = "udp" ];then
@@ -154,8 +156,9 @@ echo "Waiting for $SESS_DURATION sec"
 sleep $SESS_DURATION
 fi
 
-ssh server@10.0.1.1 ./stop_traffic_capture_server.sh -p $PROTO
-ssh client@192.168.0.101 ./stop_traffic_capture_client.sh -p $PROTO
+#ssh server@10.0.1.1 ./stop_traffic_capture_server.sh -p $PROTO
+#ssh client@192.168.0.101 ./stop_traffic_capture_client.sh -p $PROTO
 done
-./file_copy_to_ext_hd.sh
+echo Next Loop
+#./file_copy_to_ext_hd.sh
 done

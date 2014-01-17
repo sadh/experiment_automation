@@ -24,11 +24,19 @@
 
 1380724274 /home/shaper/ON-OFF-gen/gengeo.h
 
-1380724404 source:/home/sadh/experiment_automation/ON-OFF-gen/gengeo.c
+1386516994 source:/home/sadh/experiment_automation/ON-OFF-gen/gengeo.c
 	<stdio.h>
 	<stdlib.h>
 	<math.h>
 	"gengeo.h"
 
-1380724274 /home/sadh/experiment_automation/ON-OFF-gen/gengeo.h
+1386516994 /home/sadh/experiment_automation/ON-OFF-gen/gengeo.h
+
+1386516994 source:/home/sadh/experiment_automation/ON-OFF-gen/main.c
+	<stdio.h>
+	<stdlib.h>
+	"gengeo.h"
+	<string.h>
+	<unistd.h>
+	<math.h>
 

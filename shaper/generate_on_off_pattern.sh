@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 
 DISTRIBUTION="NONE"
 SEED=1
