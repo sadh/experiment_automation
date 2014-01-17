@@ -42,6 +42,8 @@ if  ! [[ $5 =~ ^[0-9]+$ ]]; then
 	echo "$5 :Invalid option in input file"  	
 	return 1
 fi
+
+if [ $MODE = data ];then
 if  ! [[ $6 =~ ^[0-9]+\.?[0-9]+$ ]]; then
 	echo "$6 :Invalid option in input file"  
 	return 1
@@ -52,6 +54,16 @@ if  ! [[ $7 =~ [0-9] ]]; then
 else
 	return 0
 fi
+else
+if  ! [[ $6 =~ [0-9] ]]; then
+	echo "$7 :Invalid option in input file"  
+	return 1
+else
+	return 0
+fi
+fi
+
+
 }
 
 
@@ -124,11 +136,25 @@ OFF_TIME=$(echo $line | cut -d"," -f4)
 
 SESS_DURATION=$(echo $line | cut -d"," -f5)
 
+if [ $MODE = data ];then
 INTER_ARRIVAL_TIME=$(echo $line | cut -d"," -f6)
-
 NO_OF_ITERATION=$(echo $line | cut -d"," -f7)
+else
+NO_OF_ITERATION=$(echo $line | cut -d"," -f6)
+fi
+
+
+
+if [ $MODE = data ];then
 
 check_invalid_character $DISTRIBUTION $SEED $ON_TIME $OFF_TIME $SESS_DURATION $INTER_ARRIVAL_TIME $NO_OF_ITERATION
+
+else
+
+check_invalid_character $DISTRIBUTION $SEED $ON_TIME $OFF_TIME $SESS_DURATION $NO_OF_ITERATION
+
+fi
+
 
 echo $DISTRIBUTION $SEED $ON_TIME $OFF_TIME $SESS_DURATION $INTER_ARRIVAL_TIME $NO_OF_ITERATION
 DIR="DIS_"$DISTRIBUTION"_SED_"$SEED"_ON_"$ON_TIME"_OF_"$OFF_TIME"_SD_"$SESS_DURATION"_IAT_"$INTER_ARRIVAL_TIME"_NOI_"$NO_OF_ITERATION
@@ -140,7 +166,7 @@ exit
 fi
 
 ./generate_on_off_pattern.sh -d $DISTRIBUTION -s $SEED -o $ON_TIME -f $OFF_TIME -t $SESS_DURATION -a $INTER_ARRIVAL_TIME -n $NO_OF_ITERATION -m $MODE
-#./generate_shapping_pattern.sh -m $MODE
+
 
 if [ $PROTO = "tcp" ];then
 	PORT=80

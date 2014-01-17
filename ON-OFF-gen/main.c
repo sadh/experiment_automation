@@ -9,7 +9,8 @@ const char *Options = "d:s:o:f:t:a:m:";
 const char* distributions[2] = {"GEOMETRIC","NONE"};
 const char* modes[2] = {"data","time"};
 const char* file_paths[2] = {"patterns","on-off-secuences"};
-int on_time = 0, off_time = 0, sess_length = 0, avg_iat = 0, sess_duration = 0;
+double on_time = 0, off_time = 0;
+int sess_length = 0, avg_iat = 0, sess_duration = 0;
 double inter_arrival_time = 0.0;
 int seed = 0; //Default seed
 
@@ -43,20 +44,24 @@ void gen_file_name(char* output_file, char* output_file_csv){
   strcat(file_title,tmp_string);
   strcat(file_title,"_");
   memset(tmp_string, '\0', sizeof(tmp_string));
-  sprintf(tmp_string,"%d",on_time);
+  sprintf(tmp_string,"%.3f",on_time);
   strcat(file_title,tmp_string);
   strcat(file_title,"_");
   memset(tmp_string, '\0', sizeof(tmp_string));
-  sprintf(tmp_string,"%d",off_time);
+  sprintf(tmp_string,"%.3f",off_time);
   strcat(file_title,tmp_string);
   strcat(file_title,"_");
   memset(tmp_string, '\0', sizeof(tmp_string));
   sprintf(tmp_string,"%d",sess_duration);
   strcat(file_title,tmp_string);
-  strcat(file_title,"_");
-  memset(tmp_string, '\0', sizeof(tmp_string));
-  sprintf(tmp_string,"%.3f",inter_arrival_time);
-  strcat(file_title,tmp_string);
+
+  if(mode == data){
+    strcat(file_title,"_");
+    memset(tmp_string, '\0', sizeof(tmp_string));
+    sprintf(tmp_string,"%.3f",inter_arrival_time);
+    strcat(file_title,tmp_string);
+  }
+
   memset(output_file, '\0', sizeof(60));
   memset(output_file_csv, '\0', sizeof(55));
   strcpy(output_file,file_title);
@@ -77,6 +82,7 @@ int main(int argc, char** argv)
   int on_packets = 0, off_packets = 0;
   double p_on = 0.0;
   double p_off = 0.0;
+  int on,off;
 
   int calculated_delay; // Probability of success for geometric
   int    geo_rv_on = 0;
@@ -98,11 +104,11 @@ int main(int argc, char** argv)
             break;
         case 'o':
             input_string = optarg;
-            on_time = atoi(input_string);
+            on_time = atof(input_string);
             break;
         case 'f':
             input_string = optarg;
-            off_time = atoi(input_string);
+            off_time = atof(input_string);
             break;
         case 't':
             input_string = optarg;
@@ -132,6 +138,7 @@ int main(int argc, char** argv)
            usage(argv[0]);
         }
     }
+
     if (argc == 1 || argc > optind || errflg > 0 || optind < 6) {
         usage(argv[0]);
     }
@@ -147,13 +154,15 @@ int main(int argc, char** argv)
     printf("ERROR in creating output file (%s) \n", output_file);
     exit(1);
   }
-  fp_on_off = fopen(output_file_csv, "w");
-
+  if(dist == geometric){
+   fp_on_off = fopen(output_file_csv, "w");
   if (fp_on_off == NULL)
   {
     printf("ERROR in creating output file (%s) \n", output_file_csv);
     exit(1);
   }
+  }
+
 
   switch(dist){
       case geometric:
@@ -161,11 +170,11 @@ int main(int argc, char** argv)
           if(mode == data){
           if(inter_arrival_time > 0){
                 avg_iat = floor(inter_arrival_time * 1000);
-                on_time = on_time * 1000;
-                off_time = off_time * 1000;
+                on = floor(on_time * 1000);
+                off = floor(off_time * 1000);
                 sess_duration = floor(sess_duration * 1000);
-                on_packets = floor(on_time/avg_iat);
-                off_packets = floor(off_time/avg_iat);
+                on_packets = floor(on/avg_iat);
+                off_packets = floor(off/avg_iat);
                 p_on = pow((on_packets +1),-1);
                 p_off = pow((off_packets +1),-1);
                 sess_length = floor(sess_duration/avg_iat);
@@ -202,11 +211,11 @@ int main(int argc, char** argv)
             }
           }else{
 
-                on_time = on_time * 1000;
-                off_time = off_time * 1000;
+                on = floor(on_time * 1000);
+                off = floor(off_time * 1000);
                 sess_duration = floor(sess_duration * 1000);
-                p_on = pow((on_time + 1),-1);
-                p_off = pow((off_time + 1),-1);
+                p_on = pow((on + 1),-1);
+                p_off = pow((off + 1),-1);
 
                 // Generate and output geometric random variables
           if(sess_duration > 0){
@@ -246,11 +255,11 @@ int main(int argc, char** argv)
       if(mode == data){
                 if(inter_arrival_time > 0){
                 avg_iat = floor(inter_arrival_time * 1000);
-                on_time = on_time * 1000;
-                off_time = off_time * 1000;
+                on = floor(on_time * 1000);
+                off = floor(off_time * 1000);
                 sess_duration = floor(sess_duration * 1000);
-                on_packets = floor(on_time/avg_iat);
-                off_packets = floor(off_time/avg_iat);
+                on_packets = floor(on/avg_iat);
+                off_packets = floor(off/avg_iat);
                 sess_length = floor(sess_duration/avg_iat);
             }
 
@@ -258,7 +267,7 @@ int main(int argc, char** argv)
           if(sess_length > 0){
               fprintf(fp, "%d,%d",1,1);
               i = on_packets;
-              fprintf(fp, ",%d,%d", i + 1,off_time);
+              fprintf(fp, ",%d,%d", i + 1,off);
               fprintf(fp, ",%d,%d", i + 2,1);
             while (i < sess_length)
                 {
@@ -266,7 +275,7 @@ int main(int argc, char** argv)
                     i += (on_packets + off_packets);
                     if(i < sess_length){
 
-                        fprintf(fp, ",%d,%d", i + 1,off_time);
+                        fprintf(fp, ",%d,%d", i + 1,off);
                         fprintf(fp, ",%d,%d", i + 2,1);
 
                     }
@@ -275,8 +284,8 @@ int main(int argc, char** argv)
                 printf("%d",seed);
             }
       }else{
-                on_time = on_time * 1000;
-                off_time = off_time * 1000;
+                on = floor(on_time * 1000);
+                off = floor(off_time * 1000);
                 sess_duration = floor(sess_duration * 1000);
 
 
@@ -284,8 +293,8 @@ int main(int argc, char** argv)
           if(sess_duration > 0){
               fprintf(fp, "%d,%d",1,1);
 
-                        i = on_time;
-                        fprintf(fp, ",%d,%d", i + 1,off_time);
+                        i = on;
+                        fprintf(fp, ",%d,%d", i + 1,off);
                         fprintf(fp, ",%d,%d", i + 2,1);
 
 
@@ -295,7 +304,7 @@ int main(int argc, char** argv)
 
                    i += (on_time + off_time);
                     if(i < sess_duration){
-                        fprintf(fp, ",%d,%d", i + 1,off_time);
+                        fprintf(fp, ",%d,%d", i + 1,off);
                         fprintf(fp, ",%d,%d", i + 2,1);
 
                     }
@@ -310,7 +319,11 @@ int main(int argc, char** argv)
         }
 
 
-  fclose(fp_on_off);
+  if(dist == geometric){
+
+    fclose(fp_on_off);
+  }
+
   fclose(fp);
 
 

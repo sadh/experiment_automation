@@ -53,6 +53,8 @@ SEED=$(./ON-OFF-gen -d $DISTRIBUTION -s $SEED -o $ON_TIME -f $OFF_TIME -t $SESS_
 COUNTER=$(expr $COUNTER + 1)
 done
 
+if [ $DISTRIBUTION = "GEOMETRIC" ];then
 mv $(ls *.csv) sequence_files/
+fi
 mv $(ls *.txt) pattern_files/
 
