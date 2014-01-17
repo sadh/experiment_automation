@@ -12,7 +12,8 @@ NO_OF_ITERATION=1
 COUNTER=1
 MODE=data
 PROTO=udp
-PORT=4000
+PORT=6000
+COMMENT="_"
 function usage {
 cat << EOF
 usage: capture_session.sh [-f <input_files>| -m [data][time] -t [tcp][udp]
@@ -55,7 +56,7 @@ fi
 
 
 
-while getopts "f:m:t:h" opt; do
+while getopts "f:m:t:h:c:" opt; do
   case $opt in
     	f)
       	SESSION_DESCRIPTION_FILE=$OPTARG
@@ -66,7 +67,10 @@ while getopts "f:m:t:h" opt; do
 	t)
       	PROTO=$OPTARG
       	;;
-	h)
+	c)
+        COMMENT=$OPTARG
+        ;;
+        h)
       	usage
       	;;
     	\?)
@@ -96,17 +100,18 @@ elif [[ -z $MODE ]];then
 	exit 1
 fi
 
-cat $SESSION_DESCRIPTION_FILE | sed 1d | while read line;
-do
+while read -u3 line;do
+echo $line
 rm -rf "pattern_files"
 rm -rf "sequence_files"
-rm -rf "shapping_files"
 mkdir -p "pattern_files"
 mkdir -p "sequence_files"
+rm -rf "shapping_files"
 mkdir -p "shapping_files"
 
 if [[ -z $line ]]
 then
+echo "Empty line."
 continue
 fi
 DISTRIBUTION=$(echo $line | cut -d"," -f1)
@@ -126,6 +131,7 @@ NO_OF_ITERATION=$(echo $line | cut -d"," -f7)
 check_invalid_character $DISTRIBUTION $SEED $ON_TIME $OFF_TIME $SESS_DURATION $INTER_ARRIVAL_TIME $NO_OF_ITERATION
 
 echo $DISTRIBUTION $SEED $ON_TIME $OFF_TIME $SESS_DURATION $INTER_ARRIVAL_TIME $NO_OF_ITERATION
+DIR="DIS_"$DISTRIBUTION"_SED_"$SEED"_ON_"$ON_TIME"_OF_"$OFF_TIME"_SD_"$SESS_DURATION"_IAT_"$INTER_ARRIVAL_TIME"_NOI_"$NO_OF_ITERATION
 
 ISVALID=$?
 
@@ -142,23 +148,32 @@ fi
 
 file_list=$(ls shapping_files/)
 
-for shapping_file in $file_list;
-do
+for shapping_file in $file_list;do
 shapping_file_name=${shapping_file//.dcp/}
 SESS_DURATION=$(echo $shapping_file_name | cut -d_ -f5)
-#./apply_shapping_pattern.sh -f $shapping_file -p $PROTO
-#./start_server.sh -f $shapping_file_name -t $PROTO -p $PORT
-#./start_client.sh -f $shapping_file_name -t $PROTO -p $PORT
+./apply_shapping_pattern.sh -f $shapping_file -p $PROTO
 
+if [ $PROTO = "udp" ];then
+./start_client.sh -f $shapping_file_name -t $PROTO -p $PORT
+./start_server.sh -f $shapping_file_name -t $PROTO -p $PORT
+else
+./start_server.sh -f $shapping_file_name -t $PROTO -p $PORT
+./start_client.sh -f $shapping_file_name -t $PROTO -p $PORT
+fi
 
 if [ $PROTO = "udp" ];then
 echo "Waiting for $SESS_DURATION sec"
 sleep $SESS_DURATION
 fi
 
-#ssh server@10.0.1.1 ./stop_traffic_capture_server.sh -p $PROTO
-#ssh client@192.168.0.101 ./stop_traffic_capture_client.sh -p $PROTO
+sleep 1
+ssh server@10.0.1.1 ./stop_traffic_capture_server.sh -p $PROTO
+sleep 4
+ssh client@192.168.0.101 ./stop_traffic_capture_client.sh -p $PROTO
 done
-echo Next Loop
-#./file_copy_to_ext_hd.sh
-done
+
+sleep 5
+sudo  ipfw -f flush
+sudo  ipfw -f pipe flush
+./file_copy_to_ext_hd.sh  -d $DIR -m $MODE -t $PROTO -c $COMMENT
+done 3<$SESSION_DESCRIPTION_FILE
