@@ -226,7 +226,7 @@ int main(int argc, char** argv)
               i = geo_rv_on;
               fprintf(fp_on_off, "%d, %d\n", geo_rv_on, geo_rv_off);
               fprintf(fp, ",%d,%d", i + 1,calculated_delay);
-              fprintf(fp, ",%d,%d", i + 2,1);
+              fprintf(fp, ",%d,%d", i + 11,1);
 
               i += geo_rv_off;
 
@@ -240,7 +240,7 @@ int main(int argc, char** argv)
                     if(i < sess_duration){
                         fprintf(fp_on_off, "%d, %d\n", geo_rv_on, geo_rv_off);
                         fprintf(fp, ",%d,%d", i + 1, calculated_delay);
-                        fprintf(fp, ",%d,%d", i + 2, 1);
+                        fprintf(fp, ",%d,%d", i + 11, 1);
 
                     }
                     i += geo_rv_off;
@@ -295,7 +295,7 @@ int main(int argc, char** argv)
 
                         i = on;
                         fprintf(fp, ",%d,%d", i + 1,off);
-                        fprintf(fp, ",%d,%d", i + 2,1);
+                        fprintf(fp, ",%d,%d", i + 11,1);
 
 
 
@@ -305,7 +305,7 @@ int main(int argc, char** argv)
                    i += (on_time + off_time);
                     if(i < sess_duration){
                         fprintf(fp, ",%d,%d", i + 1,off);
-                        fprintf(fp, ",%d,%d", i + 2,1);
+                        fprintf(fp, ",%d,%d", i + 11,1);
 
                     }
                 }
