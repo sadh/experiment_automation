@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 
 SESS_DURATION=0
 SESSION_DESCRIPTION_FILE=''
@@ -165,8 +165,13 @@ if [ ! $ISVALID ];then
 exit
 fi
 
+if [ $MODE = "data" ];then
 ./generate_on_off_pattern.sh -d $DISTRIBUTION -s $SEED -o $ON_TIME -f $OFF_TIME -t $SESS_DURATION -a $INTER_ARRIVAL_TIME -n $NO_OF_ITERATION -m $MODE
+else
+./generate_on_off_pattern.sh -d $DISTRIBUTION -s $SEED -o $ON_TIME -f $OFF_TIME -t $SESS_DURATION -n $NO_OF_ITERATION -m $MODE
+fi
 
+./generate_shapping_pattern.sh -m $MODE
 
 if [ $PROTO = "tcp" ];then
 	PORT=80

@@ -26,11 +26,11 @@ do
 	typeset -i SHAPPING_TIME
 	typeset -f SESSION_LENGTH NTER_ARRIVAL_TIME
 	SESSION_LENGTH=$(echo $patt_file_name | cut -d_ -f5)
-	INTER_ARRIVAL_TIME=$(echo $patt_file_name | cut -d_ -f6)
 	if [ $MODE = "time" ];then
-		SHAPPING_TIME=$(echo "scale=0; $SESSION_LENGTH * 1000" | bc -l)
+		SHAPPING_TIME=$(echo "scale=0; $SESSION_LENGTH * 1000 + 10" | bc -l)
 		patt_gen -del -pos "shapping_files/$patt_file_name"".dcp" $MODE $SHAPPING_TIME -f pattern_files/$patt_file
 	else
+		INTER_ARRIVAL_TIME=$(echo $patt_file_name | cut -d_ -f6)
 		NO_Of_PACKETS=$(echo "scale=0; $SESSION_LENGTH / $INTER_ARRIVAL_TIME" | bc -l)
 		patt_gen -del -pos "shapping_files/$patt_file_name"".dcp" $MODE $NO_Of_PACKETS -f pattern_files/$patt_file
 	fi

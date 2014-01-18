@@ -302,7 +302,7 @@ int main(int argc, char** argv)
             while (i < sess_duration)
                 {
 
-                   i += (on_time + off_time);
+                   i += (on + off);
                     if(i < sess_duration){
                         fprintf(fp, ",%d,%d", i + 1,off);
                         fprintf(fp, ",%d,%d", i + 11,1);
