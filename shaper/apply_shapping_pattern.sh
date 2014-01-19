@@ -24,5 +24,5 @@ sudo  ipfw -f flush
 sudo  ipfw -f pipe flush
 sudo  ipfw add allow all from any to any
 sudo  ipfw add 1 pipe 1001 $PROTO from 10.0.1.1 to 192.168.0.101 in
-sudo  ipfw pipe 1001 config delay 1ms bw 100Mbit/s pattern $PATT_FILE_NAME
+sudo  ipfw pipe 1001 config delay 1ms bw 10Mbit/s pattern $PATT_FILE_NAME
 
