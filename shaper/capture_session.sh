@@ -14,6 +14,7 @@ MODE=data
 PROTO=udp
 PORT=6000
 COMMENT="_"
+REALTIME=2
 function usage {
 cat << EOF
 usage: capture_session.sh [-f <input_files>| -m [data][time] -t [tcp][udp]
@@ -68,7 +69,7 @@ fi
 
 
 
-while getopts "f:m:t:h:c:" opt; do
+while getopts "f:m:t:h:c:r" opt; do
   case $opt in
     	f)
       	SESSION_DESCRIPTION_FILE=$OPTARG
@@ -82,6 +83,9 @@ while getopts "f:m:t:h:c:" opt; do
 	c)
         COMMENT=$OPTARG
         ;;
+	r)
+	REALTIME=1
+	;;
         h)
       	usage
       	;;
@@ -185,11 +189,11 @@ SESS_DURATION=$(echo $shapping_file_name | cut -d_ -f5)
 ./apply_shapping_pattern.sh -f $shapping_file -p $PROTO
 
 if [ $PROTO = "udp" ];then
-./start_client.sh -f $shapping_file_name -t $PROTO -p $PORT
-./start_server.sh -f $shapping_file_name -t $PROTO -p $PORT
+./start_client.sh -f $shapping_file_name -t $PROTO -p $PORT -r $REALTIME
+./start_server.sh -f $shapping_file_name -t $PROTO -p $PORT -r $REALTIME
 else
-./start_server.sh -f $shapping_file_name -t $PROTO -p $PORT
-./start_client.sh -f $shapping_file_name -t $PROTO -p $PORT
+./start_server.sh -f $shapping_file_name -t $PROTO -p $PORT -r $REALTIME
+./start_client.sh -f $shapping_file_name -t $PROTO -p $PORT -r $REALTIME
 fi
 
 if [ $PROTO = "udp" ];then
@@ -198,13 +202,15 @@ sleep $SESS_DURATION
 fi
 
 sleep 1
-ssh server@10.0.1.1 ./stop_traffic_capture_server.sh -p $PROTO
+ssh server@10.0.1.1 ./stop_traffic_capture_server.sh -p $PROTO -r $REALTIME
 sleep 4
-ssh client@192.168.0.101 ./stop_traffic_capture_client.sh -p $PROTO
+ssh client@192.168.0.101 ./stop_traffic_capture_client.sh -p $PROTO -r $REALTIME
 done
 
 sleep 5
 sudo  ipfw -f flush
 sudo  ipfw -f pipe flush
+if [ $REALTIME = 2 ];then
 ./file_copy_to_ext_hd.sh  -d $DIR -m $MODE -t $PROTO -c $COMMENT
+fi
 done 3<$SESSION_DESCRIPTION_FILE
