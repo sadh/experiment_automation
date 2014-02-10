@@ -17,6 +17,12 @@
 *.out
 *.app
 
-bin/
 
-*~
+obj/
+
+pattern_files/
+sequence_files/
+shapping_files/
+shaper/ON-OFF-gen
+#Remove swp files
+*.*~
