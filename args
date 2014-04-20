@@ -1,0 +1,11 @@
+
+
+rmem: 10240 87380 12582912
+wmem: 10240 87380 12582912
+
+Select: ALT + M + A
+Copy: ALT + 6
+Paste: CTRL + U
+
+
+perl tcp_sess.pl --url=videos.tar.gz --shaping='on:3 off:3 seed:1 dist:NONE duration:100 mode:time' --server-settings='rmem:10240,87380,12582912 wmem:10240,87380,12582912 congestion:cubic' --client-settings='rmem:10240,87380,12582912 wmem:10240,87380,12582912 congestion:cubic'
