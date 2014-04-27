@@ -1,0 +1,32 @@
+set terminal postscript eps enhanced color font "Times" 25
+set output "cwnd.eps"
+set title "Congestion Window Graph"
+set style data fsteps
+set xdata time 			# indicate that the X-axis carries time values
+set timefmt "%S"
+set style line 99 linetype 1 linecolor rgb "#999999" lw 2
+set key right bottom
+set key box linestyle 99
+set key spacing 1.2
+
+set grid xtics ytics mytics
+
+set size 2
+
+filenames = "cubic reno westwood"
+colors = "red green #0000FF"
+
+set format y "%.0f"
+set xrange [0.0:]
+
+
+set ylabel "Congestion Window Size X MSS [bytes]"
+set xlabel "Time [seconds]"
+
+set style line 1 lt 1 lw 1 pi 1
+#set style line 2 lc rgb '#0060ad' lt 1 lw 3
+#set style line 3 lc rgb '#cdaf95' lt 1 lw 3
+
+plot  for [i=1:3] word(filenames,i)."\.data" every 5 using 1:6 smooth unique title word(filenames,i) with lines ls 1 lc rgb word(colors,i)
+
+

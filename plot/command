@@ -1,0 +1,2 @@
+awk '!a[$0]++' in.file > out.file
+
